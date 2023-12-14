@@ -1,0 +1,212 @@
+Java code
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+public class MainActivity extends AppCompatActivity {
+ EditText uname,pass;
+ TextView txt;
+ Button ins,del,dis,upd;
+ dbhelper helper;
+ private static final String dbname="comp";
+ private static final String tbname = "employ";
+ private static final int dbversion =1;
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+ setContentView(R.layout.activity_main);
+ uname=findViewById(R.id.uname);
+ pass=findViewById(R.id.pass);
+ ins=findViewById(R.id.button);
+ del=findViewById(R.id.button2);
+ upd=findViewById(R.id.button3);
+ dis=findViewById(R.id.button4);
+ txt=findViewById(R.id.prin);
+ ins.setOnClickListener(new View.OnClickListener() {
+ @Override
+ public void onClick(View view) {
+ helper=new dbhelper(MainActivity.this,dbname,null,dbversion);
+ long lo=helper.adduser(uname.getText().toString(),pass.getText().toString());
+ if(lo==-1)
+ Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+ else
+ Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_SHORT).show();
+ }
+ });
+ del.setOnClickListener(new View.OnClickListener() {
+ @Override
+ public void onClick(View view) {
+ helper=new dbhelper(MainActivity.this,dbname,null,dbversion);
+ helper.delete(uname.getText().toString());
+ }
+ });
+ upd.setOnClickListener(new View.OnClickListener() {
+ @Override
+ public void onClick(View view) {
+ helper=new dbhelper(MainActivity.this,dbname,null,dbversion);
+ helper.update(uname.getText().toString(),pass.getText().toString());
+ }
+ });
+ dis.setOnClickListener(new View.OnClickListener() {
+ @Override
+ public void onClick(View view) {
+ helper=new dbhelper(MainActivity.this,dbname,null,dbversion);
+ String res= helper.display(MainActivity.this);
+ txt.setText(res);
+ }
+ });
+ }
+}
+
+
+Xml code
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:app="http://schemas.android.com/apk/res-auto"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:orientation="vertical"
+ tools:context=".MainActivity" >
+ <EditText
+ android:id="@+id/uname"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginTop="50dp"
+ android:ems="10"
+ android:hint="Username"
+ android:inputType="textPersonName"
+ android:textAlignment="center"
+ android:textSize="30dp"
+ android:textColorHint="@color/purple_500"/>
+ <EditText
+ android:id="@+id/pass"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginTop="15dp"
+ android:ems="10"
+ android:hint="Password"
+ android:inputType="textPersonName"
+ android:textAlignment="center"
+ android:textSize="30dp"
+ android:textColorHint="@color/purple_700"/>
+ <Button
+ android:id="@+id/button"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginTop="40dp"
+ android:lineSpacingExtra="15dp"
+ android:shadowRadius="100"
+ android:text="Insert"
+ android:textSize="25dp"
+ app:cornerRadius="20dp"
+ android:backgroundTint="@color/blue"/>
+ <Button
+ android:id="@+id/button2"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginTop="10dp"
+ android:lineSpacingExtra="25dp"
+ android:text="Delete"
+ android:textSize="25dp"
+ app:cornerRadius="20dp"
+ android:backgroundTint="@color/red"/>
+ <Button
+ android:id="@+id/button3"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginTop="10dp"
+ android:lineSpacingExtra="15dp"
+ android:text="Update"
+ android:textSize="25dp"
+ app:cornerRadius="20dp"
+ android:backgroundTint="@color/blue"/>
+ <Button
+ android:id="@+id/button4"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginTop="10dp"
+ android:lineSpacingExtra="15dp"
+ android:text="Display"
+ android:textSize="25dp"
+ app:cornerRadius="20dp"
+ android:backgroundTint="@color/red"/>
+ <TextView
+ android:id="@+id/prin"
+ android:layout_width="match_parent"
+ android:layout_height="wrap_content"
+ android:layout_marginTop="40dp"
+ android:text="TEXTVIEW"
+ android:textAlignment="center"
+ android:textSize="30dp" />
+</LinearLayout>
+
+
+
+
+dbhelper.java
+
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import androidx.annotation.Nullable;
+
+public class dbhelper extends SQLiteOpenHelper {
+
+    private static final String dbname="comp";
+    private static final String tbname = "employ";
+    private static final int dbversion =1;
+
+    public dbhelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, dbname,null, dbversion);
+    }
+
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL("CREATE TABLE "+tbname+"(uname VARCHAR(10),passw VARCHAR(10))"+";");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+tbname);
+        onCreate(sqLiteDatabase);
+    }
+    public long adduser(String name, String pass){
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("uname",name);
+        cv.put("passw",pass);
+        long result = sqLiteDatabase.insert(tbname,null,cv);
+        sqLiteDatabase.close();
+        return result;
+    }
+    public void update(String name, String pass){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("UPDATE "+tbname+" SET passw='"+pass+"' "+" WHERE uname='"+name+"'");
+        sqLiteDatabase.close();
+    }
+    public void delete(String name) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("DELETE FROM " + tbname + " WHERE uname='" + name+"'");
+        sqLiteDatabase.close();
+    }
+    public String display(Context ctx){
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM "+tbname,null);
+        String finalres = "";
+        while(cursor.moveToNext()) {
+            finalres += cursor.getString(0) + ": " + cursor.getString(1);
+        }
+        return finalres;
+    }
+}

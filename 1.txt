@@ -1,0 +1,146 @@
+ Activity cycle Java code
+
+
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.Toast;
+public class MainActivity extends AppCompatActivity {
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+ setContentView(R.layout.activity_main);
+ }
+ @Override
+ protected void onPause() {
+ Toast.makeText(getApplicationContext(), "Application Paused", Toast.LENGTH_SHORT).show();
+ super.onPause();
+ }
+ @Override
+ protected void onStart() {
+ Toast.makeText(getApplicationContext(), "Application Started", Toast.LENGTH_SHORT).show();
+ super.onStart();
+ }
+ @Override
+ protected void onStop() {
+ Toast.makeText(getApplicationContext(), "Application Stopped", Toast.LENGTH_SHORT).show();
+ super.onStop();
+ }
+ @Override
+ protected void onResume() {
+ Toast.makeText(getApplicationContext(), "Activity Resumed", Toast.LENGTH_SHORT).show();
+ super.onResume();
+ }
+}
+
+
+
+
+
+
+
+
+XML Code
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout 
+xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:app="http://schemas.android.com/apk/res-auto"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:background="@drawable/bgforlogin"
+ tools:context=".MainActivity">
+ <TextView
+ android:id="@+id/textView"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Login Page"
+ android:textColor="@color/white"
+ android:textSize="40dp"
+ android:textStyle="italic"
+ app:layout_constraintBottom_toBottomOf="parent"
+ app:layout_constraintEnd_toEndOf="parent"
+ app:layout_constraintHorizontal_bias="0.448"
+ app:layout_constraintStart_toStartOf="parent"
+ app:layout_constraintTop_toTopOf="parent"
+ app:layout_constraintVertical_bias="0.312" />
+ <EditText
+ android:id="@+id/editTextTextPersonName2"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:ems="10"
+ android:textSize="20dp"
+ android:textColorHint="@color/white"
+ android:textColor="@color/white"
+ android:hint="Enter the UserName"
+ android:inputType="textPersonName"
+ app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName3"
+ app:layout_constraintEnd_toEndOf="parent"
+ app:layout_constraintHorizontal_bias="0.497"
+ app:layout_constraintStart_toStartOf="parent"
+ app:layout_constraintTop_toBottomOf="@+id/textView"
+ app:layout_constraintVertical_bias="0.496" />
+ <EditText
+ android:id="@+id/editTextTextPersonName3"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:layout_marginBottom="200dp"
+ android:ems="10"
+ android:textSize="20dp"
+ android:textColorHint="@color/white"
+ android:inputType="textPersonName"
+ android:textColor="@color/white"
+ android:hint="Enter the Password"
+ app:layout_constraintBottom_toBottomOf="parent"
+ app:layout_constraintEnd_toEndOf="parent"
+ app:layout_constraintHorizontal_bias="0.497"
+ app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+Web view java code
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.os.Bundle;
+public class MainActivity extends AppCompatActivity {
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+ setContentView(R.layout.activity_main);
+ WebView webView = findViewById(R.id.web);
+ webView.loadUrl("https://github.com");
+ webView.getSettings().setJavaScriptEnabled(true);
+ webView.setWebViewClient(new WebViewClient());
+ }
+}
+
+
+Xml code
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout 
+xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:app="http://schemas.android.com/apk/res-auto"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ tools:context=".MainActivity">
+ <LinearLayout
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:orientation="vertical">
+ <WebView
+ android:id="@+id/web"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ tools:layout_editor_absoluteX="8dp"
+ tools:layout_editor_absoluteY="8dp" />
+ </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
